@@ -20,7 +20,7 @@ class TestTextNode(unittest.TestCase):
         self.assertIn("example.com", repr(link_node), "URL should appear for LINKS type")
 
         # Type not LINKS should not give URl
-        non_link_node = TextNode("No Link here", TextType.NORMAL, "example.com")
+        non_link_node = TextNode("No Link here", TextType.TEXT, "example.com")
         self.assertNotIn("example.com", repr(non_link_node), "URL should not appear for Non-LINKS types")
 
         empty_url_node = TextNode("Broken link", TextType.LINKS)

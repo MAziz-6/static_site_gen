@@ -10,5 +10,9 @@ def text_node_to_html_node(text_node):
             LeafNode(tag="b", value=text_node.value)
         case TextType.ITALIC:
             LeafNode(tag="i",value=text_node.value)
-        case TextType.ITALIC:
-            LeafNode(tag="i",value=text_node.value)
+        case TextType.CODE:
+            LeafNode(tag="code",value=text_node.value)
+        case TextType.LINK:
+            LeafNode(tag="a",value=text_node.value, props=text_node.props)
+        case TextType.IMAGES:
+            LeafNode(tag="img",value=None, )

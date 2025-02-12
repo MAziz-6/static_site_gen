@@ -135,3 +135,6 @@ class TestParentNode(unittest.TestCase):
         )
         expected = '<p id="main" data="test_data"><a href="https://www.google.com">we got one</a><b>Bold Test</b></p>'
         self.assertEqual(n_nested_props.to_html(), expected)
+
+if __name__ == "__main__":
+    unittest.main()

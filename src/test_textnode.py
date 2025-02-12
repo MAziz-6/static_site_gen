@@ -32,7 +32,7 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(w_url_node, wo_url_node)
         
     def test_none_v_missing_url(self):
-        none_url_node = TextNode("Should be nutttin to see here", TextType.LINK, None)
+        none_url_node = TextNode("Should be nutttin to see here", TextType.LINK, url=None)
         missing_url_node = TextNode("Should be nutttin to see here", TextType.LINK)
         self.assertEqual(none_url_node, missing_url_node, "Even with LINK, none or missing url should not populate")
 

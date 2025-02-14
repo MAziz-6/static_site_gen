@@ -86,3 +86,47 @@ class Test_Split_Nodes_Link(unittest.TestCase):
         ]
         result = split_nodes_link(input_nodes)
         self.assertEqual(result,expected)
+
+class Test_Split_Nodes_Images(unittest.TestCase):
+    def test_no_images(self):
+        input_nodes = [TextNode("This is plain text.", TextType.TEXT)]
+        expected = [TextNode("This is plain text.", TextType.TEXT)]
+        result = split_nodes_image(input_nodes)
+        self.assertEqual(result, expected)
+
+    def test_single_image(self):
+        input_nodes = [TextNode("Visit ![Boot.dev](https://www.boot.dev).", TextType.TEXT)]
+        expected = [
+            TextNode("Visit ", TextType.TEXT),
+            TextNode("Boot.dev", TextType.IMAGE, "https://www.boot.dev"),
+            TextNode(".", TextType.TEXT)
+        ]
+        result = split_nodes_image(input_nodes)
+        self.assertEqual(result, expected)
+
+    def test_multiple_images(self):
+        input_nodes = [TextNode("Links: ![One](https://link1.com) and ![Two](https://link2.com).", TextType.TEXT)]
+        expected = [
+            TextNode("Links: ", TextType.TEXT),
+            TextNode("One", TextType.IMAGE, "https://link1.com"),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("Two", TextType.IMAGE, "https://link2.com"),
+            TextNode(".", TextType.TEXT)
+        ]
+        result = split_nodes_image(input_nodes)
+        self.assertEqual(result, expected)
+
+    def test_empty_text(self):
+        input_nodes = [TextNode("", TextType.TEXT)]
+        expected = [TextNode("", TextType.TEXT)]
+        result = split_nodes_image(input_nodes)
+        self.assertEqual(result, expected)
+
+    def test_adjacent_images(self):
+        input_nodes = [TextNode("![One](https://link1.com)![Two](https://link2.com)", TextType.TEXT)]
+        expected = [
+            TextNode("One", TextType.IMAGE, "https://link1.com"),
+            TextNode("Two", TextType.IMAGE, "https://link2.com"),
+        ]
+        result = split_nodes_image(input_nodes)
+        self.assertEqual(result,expected)

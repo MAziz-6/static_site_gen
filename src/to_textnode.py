@@ -19,9 +19,6 @@ def text_to_textnodes(text):
     return new_nodes
 
 
-text = "This is **bold *italic* bold**"
-nodes = text_to_textnodes(text)
-for node in nodes:
-    print(f"Text: '{node.text}', Type: {node.text_type}")
+
 
     

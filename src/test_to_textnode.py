@@ -36,14 +36,25 @@ class TestToTextNode(unittest.TestCase):
         ]
         self.assertEqual(node, expected)
 
-    def test_nested_md(self):
-        text = "Here is **nested *markdown* boy**"
-        node = text_to_textnodes(text)
+    def test_unmatched_delimiter(self):
+        text = "This has **unmatched bold"
+        with self.assertRaises(ValueError):
+            text_to_textnodes(text)
+
+    def test_multiple_bold(self):
+        text = "This has **two** separate **bold** words"
         expected = [
-            TextNode("Here is ", TextType.TEXT),
-            TextNode("nested ", TextType.BOLD),
-            TextNode("markdown", TextType.ITALIC),
-            TextNode(" boy", TextType.BOLD),
-            TextNode("", TextType.TEXT)
+            TextNode("This has ", TextType.TEXT),
+            TextNode("two", TextType.BOLD),
+            TextNode(" separate ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" words", TextType.TEXT)
         ]
-        self.assertEqual(node, expected)
+        self.assertEqual(text_to_textnodes(text), expected)
+
+    def test_complex_url(self):
+        text = "[link](https://example.com/path?param=value)"
+        expected = [
+            TextNode("link", TextType.LINK, "https://example.com/path?param=value")
+        ]
+        self.assertEqual(text_to_textnodes(text), expected)

@@ -1,24 +1,21 @@
 import re
 
 def markdown_to_blocks(markdown):
-    """
-    1) split the lines based on blank lines --can be multiple, not just line breaks
-    2) strip any whitespace
-    3) remove any empty blocks
-    """
     new_blocks = []
-    # Split lines based on blank line(s) -- regex time
+    # Split lines based on blank line(s)
     blocks = re.split(r"\n\s*\n", markdown)
 
     for block in blocks:
+        # Skip empty blocks
         if not block.strip():
             continue
-        # split into lines
+        # Split into lines and clean each line
         lines = block.split("\n")
-        # strip each line
-        cleaned_lines = [line.strip() for line in lines]
-        # join back
+        # Strip each line and remove any empty lines
+        cleaned_lines = [line.strip() for line in lines if line.strip()]
+        # Join back together
         cleaned_block = "\n".join(cleaned_lines)
-        # add to list
-        new_blocks.append(cleaned_block)
+        # Only append if we have content
+        if cleaned_block:
+            new_blocks.append(cleaned_block)
     return new_blocks

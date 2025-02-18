@@ -8,7 +8,7 @@ class TestMDtoBlocks(unittest.TestCase):
 
             """
         node = markdown_to_blocks(markdown)
-        print("test node:", node)
+        # print("test node:", node)
         expected = ["# This is a header"]
         self.assertEqual(node, expected)
 
@@ -20,7 +20,7 @@ class TestMDtoBlocks(unittest.TestCase):
 
             """
         node = markdown_to_blocks(markdown)
-        print("test node:", node)
+        # print("test node:", node)
         expected = [
             "# This is a header", 
             "This is a paragraph of text. It has some **bold** and *italic* words inside of it."
@@ -39,7 +39,7 @@ class TestMDtoBlocks(unittest.TestCase):
 
             """
         node = markdown_to_blocks(markdown)
-        print("test node:", node)
+        # print("test node:", node)
         expected = [
             "# This is a header", 
             "This is a paragraph of text. It has some **bold** and *italic* words inside of it.",

@@ -1,6 +1,13 @@
 import re
+from enum import Enum
 
-
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
 
 def are_all_lines_quotes(lines):
     return all(line.strip().startswith(">") for line in lines)
@@ -24,22 +31,22 @@ def is_ordered_list(lines):
     return True
 
 def block_to_block_type(block):
-    block_type = None
+    block_type = BlockType.PARAGRAPH
     lines = block.split("\n")
     first_line = lines[0]
 
     match first_line:
         case line if re.match(r"^#{1,6} ", line) :
-            block_type = "heading"        
+            block_type = BlockType.HEADING        
         case _:
             if are_all_lines_quotes(lines):
-                block_type = "quote"
+                block_type = BlockType.QUOTE
             elif are_all_lines_unordered_list(lines):
-                block_type = "unordered_list"
+                block_type = BlockType.UNORDERED_LIST
             elif is_code(block):
-                block_type = "code"
+                block_type = BlockType.CODE
             elif is_ordered_list(lines):
-                block_type = "ordered_list"
+                block_type = BlockType.ORDERED_LIST
             else:
-                block_type = "paragraph"
+                block_type = BlockType.PARAGRAPH
     return block_type

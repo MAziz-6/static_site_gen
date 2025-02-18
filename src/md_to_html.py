@@ -28,42 +28,61 @@ def markdown_to_html_node(markdown):
         elif type == BlockType.CODE:
             node = code_to_html(block)
             children.append(node)
+        elif type == BlockType.QUOTE:
+            node = quote_to_html(block)
+            children.append(node)
         else:
             node = paragraph_to_html(block)
             children.append(node)
-        final_node = ParentNode(tag="div", children=children)
+    final_node = ParentNode(tag="div", children=children)
     return final_node
 
 
 def heading_to_html(block):
     match = re.match(r"^(#{1,6})\s", block)
     header_counter = len(match.group(1))
-    node = HTMLNode(tag="h"+ str(header_counter), value=block)
+    heading_text = block[match.end():].strip()  # Slice after the matched part
+    node = HTMLNode(tag="h"+ str(header_counter), value=heading_text)
     return node
 
 def paragraph_to_html(block):
-    return HTMLNode(tag="p", value=block)
+    sanitized_text = block.strip()
+    return HTMLNode(tag="p", value=sanitized_text)
 
 def code_to_html(block):
-    return HTMLNode(tag="code", value=block)
+    code_text = re.sub(r"^```|```$", "", block).strip()
+    node = HTMLNode(tag="code", value=code_text)
+    return node
 
 def quote_to_html(block):
-    return HTMLNode(tag="blockquote", value=block)
+    quote_text = re.sub(r"^>\s*", "", block).strip()  # Removes leading `>` followed by spaces
+    node = HTMLNode(tag="blockquote", value=quote_text)
+    return node
 
 def unordered_list_to_html(block):
     children = []
-    for item in block:
-        cleaned_item = item.lstrip("*-").strip()
+    for item in block.splitlines():  # Ensures you process each line as an individual list item
+        # Regex to match and remove leading `*` or `-` and spaces
+        match = re.match(r"^[*-]\s*", item)
+        if match:
+            cleaned_item = item[match.end():].strip()  # Slice after the match
+        else:
+            cleaned_item = item.strip()  # Fallback in case of no match (be defensive!)
         node = HTMLNode(tag="li", value=cleaned_item)
         children.append(node)
-    ul_node = ParentNode(tag="ul",children=children)
+    ul_node = ParentNode(tag="ul", children=children)
     return ul_node
 
 def ordered_list_to_html(block):
     children = []
-    for item in block:
-        cleaned_item = item.lstrip(re.match(r"^\d+\.\s", item).group(0)).strip()
+    for item in block.splitlines():  # Ensures each line is treated as a single list item
+        # Regex to match leading `1.`, `2.`, etc. and remove it
+        match = re.match(r"^\d+\.\s", item)
+        if match:
+            cleaned_item = item[match.end():].strip()  # Slice after matched prefix
+        else:
+            cleaned_item = item.strip()  # Defensive fallback
         node = HTMLNode(tag="li", value=cleaned_item)
         children.append(node)
-    ol_node = ParentNode(tag="ol",children=children)
+    ol_node = ParentNode(tag="ol", children=children)
     return ol_node

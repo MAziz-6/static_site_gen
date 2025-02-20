@@ -30,16 +30,38 @@ def generate_page(from_path, template_path, dest_path):
         file.write(final_html)
 
 
+# def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+#     for item in os.listdir(dir_path_content):
+#         content_path = os.path.join(dir_path_content, item)
+#         dest_path = os.path.join(dest_dir_path, item)
+#         if os.path.isdir(content_path):
+#             if not os.path.exists(dest_path):
+#                 os.makedirs(dest_path)
+#             generate_pages_recursive(content_path, template_path, dest_path)
+        
+#         if content_path.endswith(".md") or content_path.endswith(".markdown"):
+#             name, ext = os.path.splitext(item)
+#             new_name = name + ".html"
+#             new_path = os.path.join(dest_dir_path, new_name)
+#             generate_page(content_path, template_path, new_path)
+
+
+
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    print(f"Processing directory: {dir_path_content}")
     for item in os.listdir(dir_path_content):
         content_path = os.path.join(dir_path_content, item)
         dest_path = os.path.join(dest_dir_path, item)
+        print(f"Looking at: {content_path}")
+        
         if os.path.isdir(content_path):
+            print(f"Found directory: {content_path}")
             if not os.path.exists(dest_path):
                 os.makedirs(dest_path)
             generate_pages_recursive(content_path, template_path, dest_path)
         
         if content_path.endswith(".md") or content_path.endswith(".markdown"):
+            print(f"Processing markdown file: {content_path}")
             name, ext = os.path.splitext(item)
             new_name = name + ".html"
             new_path = os.path.join(dest_dir_path, new_name)

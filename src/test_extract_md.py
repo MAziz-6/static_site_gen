@@ -1,5 +1,5 @@
 import unittest
-from extract_md import extract_markdown_images, extract_markdown_links
+from extract_md import extract_markdown_images, extract_markdown_links, extract_title
 
 class TestExtractMd(unittest.TestCase):
     def test_img_base(self):
@@ -43,3 +43,17 @@ class TestExtractMd(unittest.TestCase):
         node = extract_markdown_links(text)
         expected = [("link", "url2")]
         self.assertEqual(node, expected)
+
+    def test_extract_title_subheaders(self):
+        text = """## Not an h1
+Some content
+# This is the real h1
+Some more content"""
+        node = extract_title(text)
+        expected = "This is the real h1"
+        self.assertEqual(node, expected)
+
+    def test_extract_title_exception(self):
+        text = "some stuff but no neader"
+        with self.assertRaises(Exception):
+            extract_title(text)

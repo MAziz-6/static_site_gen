@@ -22,6 +22,7 @@ def delete_directory(deletion_location):
         pass
 
 def copy_contents(src, dest):
+    os.makedirs(dest)
     for item in os.listdir(src):
         source_path = os.path.join(src, item)
         destination_path = os.path.join(dest, item)

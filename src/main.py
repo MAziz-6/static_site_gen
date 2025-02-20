@@ -2,13 +2,9 @@ from textnode import *
 import os
 import shutil
 
-# this_location = os.path.abspath(__file__)
 this_dir = os.path.dirname(__file__)
 destination = os.path.normpath(os.path.join(this_dir,"..","public"))
 source_location = os.path.normpath(os.path.join(this_dir, "..", "static"))
-# deletion_location = os.path.normpath(os.path.join(this_dir, "..", "test"))
-# from_here = os.path.normpath(os.path.join(this_dir, "..", "from_here"))
-# to_here = os.path.normpath(os.path.join(this_dir, "..", "to_here")) 
 
 def delete_directory(deletion_location):
     try:

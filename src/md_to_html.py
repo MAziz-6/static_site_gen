@@ -2,6 +2,8 @@ import re
 from md_to_block import markdown_to_blocks
 from block_types import block_to_block_type, BlockType
 from htmlnode import ParentNode, HTMLNode, LeafNode
+from to_textnode import text_to_textnodes
+from text_to_html import text_node_to_html_node
 
 def markdown_to_html_node(markdown):
     """
@@ -47,7 +49,13 @@ def heading_to_html(block):
 
 def paragraph_to_html(block):
     sanitized_text = block.strip()
-    return LeafNode(tag="p", value=sanitized_text)
+    text_nodes = text_to_textnodes(sanitized_text)  
+    children = []
+    for text_node in text_nodes:
+        html_node = text_node_to_html_node(text_node)
+        children.append(html_node)
+    return ParentNode(tag="p", children=children)
+
 
 def code_to_html(block):
     code_text = re.sub(r"^```|```$", "", block).strip()
@@ -61,28 +69,42 @@ def quote_to_html(block):
 
 def unordered_list_to_html(block):
     children = []
-    for item in block.splitlines():  # Ensures you process each line as an individual list item
-        # Regex to match and remove leading `*` or `-` and spaces
+    for item in block.splitlines(): 
         match = re.match(r"^[*-]\s*", item)
         if match:
             cleaned_item = item[match.end():].strip()  # Slice after the match
         else:
-            cleaned_item = item.strip()  # Fallback in case of no match (be defensive!)
-        node = LeafNode(tag="li", value=cleaned_item)
+            cleaned_item = item.strip()
+
+        # Convert the list item text to text nodes
+        text_nodes = text_to_textnodes(cleaned_item)
+        item_children = []
+        for text_node in text_nodes:
+            html_node = text_node_to_html_node(text_node)
+            item_children.append(html_node)
+
+        node = ParentNode(tag="li", children=item_children)
         children.append(node)
     ul_node = ParentNode(tag="ul", children=children)
     return ul_node
 
 def ordered_list_to_html(block):
     children = []
-    for item in block.splitlines():  # Ensures each line is treated as a single list item
-        # Regex to match leading `1.`, `2.`, etc. and remove it
+    for item in block.splitlines(): 
         match = re.match(r"^\d+\.\s", item)
         if match:
-            cleaned_item = item[match.end():].strip()  # Slice after matched prefix
+            cleaned_item = item[match.end():].strip() 
         else:
-            cleaned_item = item.strip()  # Defensive fallback
-        node = LeafNode(tag="li", value=cleaned_item)
+            cleaned_item = item.strip() 
+        
+        # Convert the list item text to text nodes
+        text_nodes = text_to_textnodes(cleaned_item)
+        item_children = []
+        for text_node in text_nodes:
+            html_node = text_node_to_html_node(text_node)
+            item_children.append(html_node)
+
+        node = ParentNode(tag="li", children=item_children)
         children.append(node)
     ol_node = ParentNode(tag="ol", children=children)
     return ol_node

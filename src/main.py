@@ -1,10 +1,14 @@
 from textnode import *
 import os
 import shutil
+from page_generator import generate_page
 
 this_dir = os.path.dirname(__file__)
 destination = os.path.normpath(os.path.join(this_dir,"..","public"))
 source_location = os.path.normpath(os.path.join(this_dir, "..", "static"))
+template_path = os.path.normpath(os.path.join(this_dir, "..", "template.html"))
+md_path = os.path.normpath(os.path.join(this_dir, "..", "content", "index.md"))
+html_dest = os.path.normpath(os.path.join(destination, "index.html"))
 
 def delete_directory(deletion_location):
     try:
@@ -56,6 +60,8 @@ def main():
     delete_directory(destination)
     # Next, create/copy everything from soure to new destination dir
     copy_contents(source_location, destination)
+    # Generate the page from content/index.md using template.html and write to public
+    generate_page(md_path, template_path, html_dest)
 
 if __name__ == "__main__":
     main()
